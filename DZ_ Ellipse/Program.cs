@@ -5,7 +5,7 @@ class Program
     public static void Main(string[] args)
     {
         int verticalRadius = 10;
-        int horizontalRadius = 5;
+        int horizontalRadius = -5;
 
         try
         {

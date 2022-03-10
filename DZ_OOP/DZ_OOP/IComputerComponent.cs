@@ -8,6 +8,6 @@ namespace DZ_OOP
 {
     public interface IComputerComponent
     {
-        public void GetComputerComponentInfo();
+        public string GetComputerComponentInfo();
     }
 }

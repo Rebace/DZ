@@ -11,9 +11,9 @@ namespace DZ_OOP
         public override string Model { get => "MSI GeForce RTX 3060Ti GAMING X 8G LHR"; }
         public override int VRAM { get => 8; }
 
-        public override void GetComputerComponentInfo()
+        public override string GetComputerComponentInfo()
         {
-            Console.WriteLine($"Videocard model: { Model }");
+            return $"Videocard model: { Model }";
         }
     }
 }

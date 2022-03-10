@@ -18,7 +18,7 @@ namespace DZ_OOP
                 throw new ArgumentException("RAM should be not null");
             }
         }
-        public abstract void GetComputerComponentInfo();
+        public abstract string GetComputerComponentInfo();
     }
 }
 

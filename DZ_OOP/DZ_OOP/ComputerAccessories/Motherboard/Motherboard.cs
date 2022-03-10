@@ -21,6 +21,6 @@ namespace DZ_OOP
             }
         }
 
-        public abstract void GetComputerComponentInfo();
+        public abstract string GetComputerComponentInfo();
     }
 }

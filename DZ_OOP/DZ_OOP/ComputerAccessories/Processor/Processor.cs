@@ -27,6 +27,6 @@ namespace DZ_OOP
                 throw new ArgumentException("Streams < 0");
             }
         }
-        public abstract void GetComputerComponentInfo();
+        public abstract string GetComputerComponentInfo();
     }
 }

@@ -11,9 +11,9 @@ namespace DZ_OOP
         public override string Model { get => "MSI GTX 1050 TI Gaming X 4G"; }
         public override int VRAM { get => 4; }
 
-        public override void GetComputerComponentInfo()
+        public override string GetComputerComponentInfo()
         {
-            Console.WriteLine($"Videocard model: { Model }");
+            return $"Videocard model: { Model }";
         }
     }
 }

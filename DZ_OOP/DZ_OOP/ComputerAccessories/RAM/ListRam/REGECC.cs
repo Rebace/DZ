@@ -12,9 +12,9 @@ namespace DZ_OOP
         public override string MemoryType { get => "DDR3"; }
         public override string MemoryCount { get => "4GB"; }
 
-        public override void GetComputerComponentInfo()
+        public override string GetComputerComponentInfo()
         {
-            Console.WriteLine($"RAM model: { Model }");
+            return $"RAM model: { Model }";
         }
     }
 }

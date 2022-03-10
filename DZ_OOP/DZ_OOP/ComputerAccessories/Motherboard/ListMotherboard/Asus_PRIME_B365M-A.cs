@@ -13,9 +13,9 @@ namespace DZ_OOP
         public override string MemoryType { get => "DDR4"; }
         public override int MemorySlotsCount { get => 4; }
 
-        public override void GetComputerComponentInfo()
+        public override string GetComputerComponentInfo()
         {
-            Console.WriteLine($"Motherboard model: { Model }");
+            return $"Motherboard model: { Model }";
         }
     }
 }

@@ -13,9 +13,9 @@ namespace DZ_OOP
         public override int Cores { get => 6; }
         public override int Streams { get => 12; }
 
-        public override void GetComputerComponentInfo()
+        public override string GetComputerComponentInfo()
         {
-            Console.WriteLine($"Processor model: { Model }");
+            return $"Processor model: { Model }";
         }
     }
 }

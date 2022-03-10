@@ -30,7 +30,7 @@ namespace DZ_OOP
                 }
                 foreach (IComputerComponent component in components)
                 {
-                    component.GetComputerComponentInfo();
+                    Console.WriteLine(component.GetComputerComponentInfo());
                     Console.WriteLine();
                 }
             }

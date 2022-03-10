@@ -141,6 +141,31 @@ namespace ComputerTest
             }
         }
         [Test]
+        public void Computer_GetComputerComponentInfo_ReturnComponents_PositiveTest()
+        {
+            //Arrange + Act
+            List<String> expected = new List<String>();
+            expected.Add("Motherboard model: Asus PRIME B365M A");
+            expected.Add("Processor model: Intel i5 8400");
+            expected.Add("RAM model: Kingston Fury Beast");
+            expected.Add("Videocard model: MSI GTX 1050 TI Gaming X 4G");
+            List<IComponentCheck> components = new List<IComponentCheck>()
+            {
+                new Asus_PRIME_B365M_A(),
+                new Intel_i5_8400(),
+                new Kingston_Fury_Beast(),
+                new MSI_GTX_1050_TI_Gaming_X_4G()
+            };
+            List<String> actual = new List<String>();
+            foreach (IComputerComponent component in components)
+            {
+                actual.Add(component.GetComputerComponentInfo());
+            }
+
+            //Assert
+            CollectionAssert.AreEqual(actual, expected);
+        }
+        [Test]
         public void Computer_ComputerWrite_ReturnComponents_PositiveTest()
         {
             //Arrange

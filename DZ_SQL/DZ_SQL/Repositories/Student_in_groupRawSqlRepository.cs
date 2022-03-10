@@ -126,40 +126,11 @@ namespace DZ_SQL.Repositories
                             result.Add(new Student
                             {
                                 Id = Convert.ToInt32(reader["StudentId"])
-                                /*GroupId = Convert.ToInt32(reader["StudentId"]),
-                                StudentId = Convert.ToInt32(reader["GroupsId"])*/
                             });
                         }
                     }
                 }
-            }
-            /*using (var connections = new SqlConnection(_connectionString))
-            {
-                connections.Open();
-                using (SqlCommand command = connections.CreateCommand())
-                {
-                    foreach (var student_in_group in students_in_group)
-                    {
-                        command.CommandText =
-                        @"select [Id], [Name]
-                        from [Student]
-                        where [Id] = @id";
-                        command.Parameters.Add("@id", SqlDbType.Int).Value = student_in_group.StudentId;
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                result.Add(new Student
-                                {
-                                    Id = Convert.ToInt32(reader["Id"]),
-                                    Name = Convert.ToString(reader["Name"])
-                                });
-                            }
-                        }
-                    }
-                }
-            }*/        
-
+            } 
             return result;
         }
     }

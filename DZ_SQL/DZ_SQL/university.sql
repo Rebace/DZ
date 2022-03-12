@@ -16,9 +16,9 @@ create table Groups(
 select * from Student
 select * from Groups
 
-create table Student_in_group(
+create table StudentInGroups(
 	StudentId int constraint FK_Post_Student references Student(Id),
 	GroupsId int constraint FK_Post_Groups references Groups(Id)
 )
 
-select * from Student_in_group
+select * from StudentInGroups

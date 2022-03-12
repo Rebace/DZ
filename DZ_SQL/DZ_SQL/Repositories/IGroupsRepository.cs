@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DZ_SQL.Repositories
 {
-    interface IGroupRepository
+    interface IGroupsRepository
     {
-        void Add(Group group);
+        void Add(Groups groups);
         void DeleteById(int id);
-        Group GetById(int id);
-        List<Group> GetAll();
-        void Update(Group group);
+        Groups GetById(int id);
+        List<Groups> GetAll();
+        void Update(Groups groups);
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DZ_SQL.Models
 {
-    public class Group
+    public class StudentInGroups
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int GroupsId { get; set; }
+        public int StudentId { get; set; }
     }
 }

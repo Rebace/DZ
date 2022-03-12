@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace DZ_SQL.Repositories
 {
-    public class GroupRawSqlRepository : IGroupRepository
+    public class GroupsRawSqlRepository : IGroupsRepository
     {
         private string _connectionString;
 
-        public GroupRawSqlRepository(string connectionString)
+        public GroupsRawSqlRepository(string connectionString)
         {
             this._connectionString = connectionString;
         }
 
-        public List<Group> GetAll()
+        public List<Groups> GetAll()
         {
-            var result = new List<Group>();
+            var result = new List<Groups>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -33,7 +33,7 @@ namespace DZ_SQL.Repositories
                     {
                         while (reader.Read())
                         {
-                            result.Add(new Group
+                            result.Add(new Groups
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 Name = Convert.ToString(reader["Name"])
@@ -46,7 +46,7 @@ namespace DZ_SQL.Repositories
             return result;
         }
 
-        public void Add(Group group)
+        public void Add(Groups groups)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -60,14 +60,14 @@ namespace DZ_SQL.Repositories
                             (@name)
                         select SCOPE_IDENTITY()";
 
-                    command.Parameters.Add("@name", SqlDbType.NVarChar).Value = group.Name;
+                    command.Parameters.Add("@name", SqlDbType.NVarChar).Value = groups.Name;
 
-                    group.Id = Convert.ToInt32(command.ExecuteScalar());
+                    groups.Id = Convert.ToInt32(command.ExecuteScalar());
                 }
             }
         }
 
-        public Group GetById(int id)
+        public Groups GetById(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -84,7 +84,7 @@ namespace DZ_SQL.Repositories
                     {
                         if (reader.Read())
                         {
-                            return new Group
+                            return new Groups
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 Name = Convert.ToString(reader["Name"])
@@ -99,7 +99,7 @@ namespace DZ_SQL.Repositories
             }
         }
 
-        public void Update(Group group)
+        public void Update(Groups groups)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -111,8 +111,8 @@ namespace DZ_SQL.Repositories
                         set [Name] = @name
                         where [Id] = @id";
 
-                    command.Parameters.Add("@name", SqlDbType.NVarChar).Value = group.Name;
-                    command.Parameters.Add("@id", SqlDbType.Int).Value = group.Id;
+                    command.Parameters.Add("@name", SqlDbType.NVarChar).Value = groups.Name;
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = groups.Id;
 
                     command.ExecuteNonQuery();
                 }

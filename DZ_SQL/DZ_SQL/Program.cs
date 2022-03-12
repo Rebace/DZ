@@ -12,8 +12,8 @@ namespace DZ_SQL
         static void Main(string[] args)
         {
             IStudentRepository studentRepository = new StudentRawSqlRepository(_connectionString);
-            IGroupRepository groupRepository = new GroupRawSqlRepository(_connectionString);
-            IStudent_in_groupRepository student_In_GroupRepository = new Student_in_groupRawSqlRepository(_connectionString);
+            IGroupsRepository groupsRepository = new GroupsRawSqlRepository(_connectionString);
+            IStudentInGroupsRepository studentInGroupsRepository = new StudentInGroupsRawSqlRepository(_connectionString);
 
             Console.WriteLine("Доступные команды:");
             Console.WriteLine("get-students - показать список студентов");
@@ -128,13 +128,13 @@ namespace DZ_SQL
                 }
                 else if (command == "get-groups")
                 {
-                    List<Group> groups = groupRepository.GetAll();
+                    List<Groups> groups = groupsRepository.GetAll();
                     if (groups.Count < 1)
                     {
                         Console.WriteLine("Нет ни одной группы");
                         continue;
                     }
-                    foreach (Group group in groups)
+                    foreach (Groups group in groups)
                     {
                         Console.WriteLine($"Id: {group.Id}, Name: {group.Name}");
                     }
@@ -149,7 +149,7 @@ namespace DZ_SQL
                         continue;
                     }
 
-                    groupRepository.Add(new Group
+                    groupsRepository.Add(new Groups
                     {
                         Name = name
                     });
@@ -158,46 +158,46 @@ namespace DZ_SQL
                 else if (command == "update-group")
                 {
                     Console.WriteLine("Введите id группы");
-                    if (!Int32.TryParse(Console.ReadLine(), out int groupId))
+                    if (!Int32.TryParse(Console.ReadLine(), out int groupsId))
                     {
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
-                    Group group = groupRepository.GetById(groupId);
+                    Groups groups = groupsRepository.GetById(groupsId);
 
-                    if (group == null)
+                    if (groups == null)
                     {
                         Console.WriteLine("Группа не найден");
                         continue;
                     }
 
                     Console.WriteLine("Введите новое имя группы");
-                    group.Name = Console.ReadLine();
-                    if (String.IsNullOrEmpty(group.Name))
+                    groups.Name = Console.ReadLine();
+                    if (String.IsNullOrEmpty(groups.Name))
                     {
                         Console.WriteLine("Имя не может быть пустым");
                         continue;
                     }
 
-                    groupRepository.Update(group);
+                    groupsRepository.Update(groups);
                     Console.WriteLine("Успешно обновлено");
                 }
                 else if (command == "delete-group")
                 {
                     Console.WriteLine("Введите id группы");
-                    if (!Int32.TryParse(Console.ReadLine(), out int groupId))
+                    if (!Int32.TryParse(Console.ReadLine(), out int groupsId))
                     {
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
-                    var group = groupRepository.GetById(groupId);
-                    if (group == null)
+                    var groups = groupsRepository.GetById(groupsId);
+                    if (groups == null)
                     {
                         Console.WriteLine("Группа не найден");
                         continue;
                     }
 
-                    groupRepository.DeleteById(group.Id);
+                    groupsRepository.DeleteById(groups.Id);
                     Console.WriteLine("Успешно удалено");
                 }
                 else if (command == "add-student-in-group")
@@ -208,20 +208,34 @@ namespace DZ_SQL
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
+                    Student student = studentRepository.GetById(studentId);
+
+                    if (student == null)
+                    {
+                        Console.WriteLine("Студент не найден");
+                        continue;
+                    }
                     Console.WriteLine("Введите id группы в которую хотите добавить студента");
-                    if (!Int32.TryParse(Console.ReadLine(), out int groupId))
+                    if (!Int32.TryParse(Console.ReadLine(), out int groupsId))
                     {
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
+                    Groups groups = groupsRepository.GetById(groupsId);
 
-                    List<Student_in_group> student_in_groups = student_In_GroupRepository.GetByIdStudent(studentId);
-                    if (!((student_in_groups.Exists(x => (x.StudentId == studentId))) & (student_in_groups.Exists(x => (x.GroupId == groupId)))))
+                    if (groups == null)
                     {
-                        student_In_GroupRepository.Add(new Student_in_group
+                        Console.WriteLine("Группа не найден");
+                        continue;
+                    }
+
+                    List<StudentInGroups> studentInGroups = studentInGroupsRepository.GetByStudentIdAndGroupsId();
+                    if (!((studentInGroups.Exists(x => (x.StudentId == studentId))) && (studentInGroups.Exists(x => (x.GroupsId == groupsId)))))
+                    {
+                        studentInGroupsRepository.Add(new StudentInGroups
                         {
                             StudentId = studentId,
-                            GroupId = groupId
+                            GroupsId = groupsId
                         });
                         Console.WriteLine("Успешно добавлено");
                     }
@@ -233,36 +247,43 @@ namespace DZ_SQL
                 else if (command == "get-students-in-group")
                 {
                     Console.WriteLine("Введите id группы в которой хотите узнать студентов");
-                    if (!Int32.TryParse(Console.ReadLine(), out int groupId))
+                    if (!Int32.TryParse(Console.ReadLine(), out int groupsId))
                     {
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
-
-                    List<Student> students_in_group = student_In_GroupRepository.GetAllByIdGroup(groupId);
-                    if (students_in_group.Count < 1)
+                    if (groupsRepository.GetById(groupsId) == null)
                     {
-                        Console.WriteLine("Нет ни одного студента");
+                        Console.WriteLine("Группа не найден");
                         continue;
                     }
 
+                    List<StudentInGroups> studentsInGroups = studentInGroupsRepository.GetByStudentIdAndGroupsId();
                     var student = new Student();
-                    foreach (var student_in_group in students_in_group)
+                    foreach (var studentInGroups in studentsInGroups)
                     {
-                        student = studentRepository.GetById(student_in_group.Id);
-                        Console.WriteLine($"Id: {student.Id}, Name: {student.Name}");
+                        if (studentInGroups.GroupsId == groupsId)
+                        {
+                            student = studentRepository.GetById(studentInGroups.StudentId);
+                            Console.WriteLine($"Id: {student.Id}, Name: {student.Name}");
+                        }
+                    }
+
+                    if (student.Id < 1)
+                    {
+                        Console.WriteLine($"Нет ни одного студента");
                     }
                 }
                 else if (command == "delete-student-in-group")
                 {
                     Console.WriteLine("Введите id группы из которой хотите удалить студента");
-                    if (!Int32.TryParse(Console.ReadLine(), out int groupId))
+                    if (!Int32.TryParse(Console.ReadLine(), out int groupsId))
                     {
                         Console.WriteLine("Вводите id цифрами");
                         continue;
                     }
-                    var group = groupRepository.GetById(groupId);
-                    if (group == null)
+                    var groups = groupsRepository.GetById(groupsId);
+                    if (groups == null)
                     {
                         Console.WriteLine("Группа не найден");
                         continue;
@@ -281,9 +302,9 @@ namespace DZ_SQL
                         continue;
                     }
 
-                    student_In_GroupRepository.DeleteById(new Student_in_group
+                    studentInGroupsRepository.DeleteById(new StudentInGroups
                     {
-                        GroupId = groupId,
+                        GroupsId = groupsId,
                         StudentId = studentId
                     });
                     Console.WriteLine("Успешно удалено");
@@ -303,35 +324,42 @@ namespace DZ_SQL
                         continue;
                     }
 
-                    List<Student_in_group> student_in_groups = student_In_GroupRepository.GetByIdStudent(studentId);
-                    var group = new Group();
-                    foreach (var student_in_group in student_in_groups)
+                    List<StudentInGroups> studentsInGroups = studentInGroupsRepository.GetByStudentIdAndGroupsId();
+                    var groups = new Groups();
+                    foreach (var studentInGroup in studentsInGroups)
                     {
-                        group = groupRepository.GetById(student_in_group.GroupId);
-                        Console.WriteLine($"Id: {group.Id}, Name: {group.Name}");
+                        if (studentInGroup.StudentId == studentId)
+                        {
+                            groups = groupsRepository.GetById(studentInGroup.GroupsId);
+                            Console.WriteLine($"Id: {groups.Id}, Name: {groups.Name}");
+                        }
+                    }
+                    if (groups.Id < 1)
+                    {
+                        Console.WriteLine($"Нет ни одной группы");
                     }
                 }
                 else if (command == "report")
                 {
-                    List<Group> groups = groupRepository.GetAll();
+                    List<Groups> groups = groupsRepository.GetAll();
                     if (groups.Count < 1)
                     {
                         Console.WriteLine("Нет ни одной группы");
                         continue;
                     }
-                    foreach (Group group in groups)
+                    foreach (Groups group in groups)
                     {
                         Console.Write($"Группа: {group.Name} ");
-                        List<Student> students_in_group = student_In_GroupRepository.GetAllByIdGroup(group.Id);
-                        if (students_in_group.Count < 1)
+                        List<Student> studentsInGroups = studentInGroupsRepository.GetAllByIdGroups(group.Id);
+                        if (studentsInGroups.Count < 1)
                         {
                             Console.WriteLine("Нет ни одного студента");
                         }
                         else
                         {
-                            Console.WriteLine($"Студентов в группе: {students_in_group.Count}");
+                            Console.WriteLine($"Студентов в группе: {studentsInGroups.Count}");
                         }
-                        
+
                     }
                 }
                 else if (command == "exit")

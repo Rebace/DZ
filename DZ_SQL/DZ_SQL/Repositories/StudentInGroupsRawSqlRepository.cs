@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace DZ_SQL.Repositories
 {
-    public class Student_in_groupRawSqlRepository : IStudent_in_groupRepository
+    public class StudentInGroupsRawSqlRepository : IStudentInGroupsRepository
     {
         private readonly string _connectionString;
 
-        public Student_in_groupRawSqlRepository(string connectionString)
+        public StudentInGroupsRawSqlRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public void Add(Student_in_group student_in_group)
+        public void Add(StudentInGroups studentInGroups)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -26,21 +26,21 @@ namespace DZ_SQL.Repositories
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     command.CommandText =
-                        @"insert into [Student_in_group]
+                        @"insert into [StudentInGroups]
                         values
-                            (@studentid, @groupid)
+                            (@studentId, @groupsId)
                         select SCOPE_IDENTITY()";
 
-                    command.Parameters.Add("@studentid", SqlDbType.Int).Value = student_in_group.StudentId;
-                    command.Parameters.Add("@groupid", SqlDbType.Int).Value = student_in_group.GroupId;
+                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = studentInGroups.StudentId;
+                    command.Parameters.Add("@groupsId", SqlDbType.Int).Value = studentInGroups.GroupsId;
 
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public List<Student_in_group> GetByIdStudent(int studentId)
+        public List<StudentInGroups> GetByStudentIdAndGroupsId()
         {
-            var result = new List<Student_in_group>();
+            var result = new List<StudentInGroups>();
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -48,17 +48,15 @@ namespace DZ_SQL.Repositories
                 {
                     command.CommandText =
                         @"select [StudentId], [GroupsId]
-                        from [Student_in_group]
-                        where [StudentId] = @studentId";
+                        from [StudentInGroups]";
 
-                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = studentId;
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            result.Add(new Student_in_group
+                            result.Add(new StudentInGroups
                             {
-                                GroupId = Convert.ToInt32(reader["StudentId"]),
+                                GroupsId = Convert.ToInt32(reader["StudentId"]),
                                 StudentId = Convert.ToInt32(reader["GroupsId"])
                             });
                         }
@@ -67,7 +65,7 @@ namespace DZ_SQL.Repositories
             }
             return result;
         }
-        public void DeleteById(Student_in_group student_In_Group)
+        public void DeleteById(StudentInGroups studentInGroups)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -75,17 +73,17 @@ namespace DZ_SQL.Repositories
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     command.CommandText =
-                        @"delete [Student_in_group]
-                        where [StudentId] = @studentId and [GroupsId] = @groupId";
+                        @"delete [StudentInGroups]
+                        where [StudentId] = @studentId and [GroupsId] = @groupsId";
 
-                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = student_In_Group.StudentId;
-                    command.Parameters.Add("@groupId", SqlDbType.Int).Value = student_In_Group.GroupId;
+                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = studentInGroups.StudentId;
+                    command.Parameters.Add("@groupsId", SqlDbType.Int).Value = studentInGroups.GroupsId;
 
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public void Update(Student_in_group student_In_Group)
+        public void Update(StudentInGroups studentInGroups)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -93,20 +91,19 @@ namespace DZ_SQL.Repositories
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     command.CommandText =
-                        @"update [Student_in_group]
-                        set [GroupsId] = @groupId
+                        @"update [StudentInGroups]
+                        set [GroupsId] = @groupsId
                         where [StudentId] = @studentId";
 
-                    command.Parameters.Add("@groupId", SqlDbType.Int).Value = student_In_Group.StudentId;
-                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = student_In_Group.GroupId;
+                    command.Parameters.Add("@groupsId", SqlDbType.Int).Value = studentInGroups.StudentId;
+                    command.Parameters.Add("@studentId", SqlDbType.Int).Value = studentInGroups.GroupsId;
 
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public List<Student> GetAllByIdGroup(int groupId)
+        public List<Student> GetAllByIdGroups(int groupsId)
         {
-            var students_in_group = new List<Student_in_group>();
             var result = new List<Student>();
 
             using (var connection = new SqlConnection(_connectionString))
@@ -115,9 +112,9 @@ namespace DZ_SQL.Repositories
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     command.CommandText =
-                        @"select [StudentId], [GroupsId] from [Student_in_group]
-                        where [GroupsId] = @groupId";
-                    command.Parameters.Add("@groupId", SqlDbType.Int).Value = groupId;
+                        @"select [StudentId], [GroupsId] from [StudentInGroups]
+                        where [GroupsId] = @groupsId";
+                    command.Parameters.Add("@groupsId", SqlDbType.Int).Value = groupsId;
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -130,7 +127,7 @@ namespace DZ_SQL.Repositories
                         }
                     }
                 }
-            } 
+            }
             return result;
         }
     }
